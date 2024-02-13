@@ -8,9 +8,7 @@ import logging
 from datetime import datetime
 
 def get_last_update_time(driver):
-    """
-    從網頁中獲取最後更新時間。
-    """
+    """從網頁中獲取最後更新時間。"""
     try:
         datetime_element = driver.find_element(By.ID, "Datatime")
         datetime_str = datetime_element.text.split('：')[-1].strip()
@@ -20,9 +18,7 @@ def get_last_update_time(driver):
         return None
 
 def fetch_rainfall_data(driver):
-    """
-    從網頁中抓取雨量資料。
-    """
+    """從網頁中抓取雨量資料。"""
     try:
         wait = WebDriverWait(driver, 10)
         table_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="sortTable"]')))
@@ -41,3 +37,11 @@ def fetch_rainfall_data(driver):
     except TimeoutException:
         logging.error("網頁載入超時，嘗試重新載入...")
         return None
+
+def save_data_to_csv(df, filename):
+    """將DataFrame保存為CSV文件"""
+    try:
+        df.to_csv(filename, index=False, encoding='utf-8-sig')
+        logging.info(f"Data saved to {filename}.")
+    except Exception as e:
+        logging.error(f"Error saving data to CSV: {e}")
